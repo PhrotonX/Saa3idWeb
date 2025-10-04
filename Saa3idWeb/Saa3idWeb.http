@@ -1,0 +1,6 @@
+@Saa3idWeb_HostAddress = http://localhost:5117
+
+GET {{Saa3idWeb_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
