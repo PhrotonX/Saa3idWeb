@@ -16,6 +16,8 @@ namespace Saa3idWeb.Data
 
 	    public DbSet<Saa3idWeb.Models.Sample> Sample { get; set; } = default!;
 		public DbSet<Saa3idWeb.Models.User> User { get; set; } = default!;
+		public DbSet<Saa3idWeb.Models.Location> Location { get; set; } = default!;
+		public DbSet<Saa3idWeb.Models.Emergency> Emergency { get; set; } = default!;
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -37,7 +39,19 @@ namespace Saa3idWeb.Data
 				entity.Property(e => e.Country).IsRequired();
 			});
 		}
-
-		
+	    
+		protected void OnSeed(ModelBuilder builder)
+		{
+			//builder.Entity<Saa3idWeb.Models.Location>().HasData(
+			//	new Location
+			//	{
+			//		Id = 1,
+			//		Title = "",
+			//		Description = "This is a sample location",
+			//		Latitude = ""
+			//	}	
+			//);
+		}
+	    
 	}
 }
