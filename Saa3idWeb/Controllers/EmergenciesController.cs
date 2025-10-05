@@ -63,10 +63,29 @@ namespace Saa3idWeb.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(emergency);
-        }
+		}
 
-        // GET: Emergencies/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+		// POST: Emergencies/Create
+		// To protect from overposting attacks, enable the specific properties you want to bind to.
+		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+		[HttpPost("api/emergency/create")]
+		//[ValidateAntiForgeryToken]
+		public async Task<IActionResult> CreateAPI([Bind("Id,Latitude,Longitude,UserId")] Emergency emergency)
+		{
+			if (ModelState.IsValid)
+			{
+				_context.Add(emergency);
+				await _context.SaveChangesAsync();
+				return RedirectToAction(nameof(Index));
+			}
+			return Json(new
+			{
+				success = true
+			});
+		}
+
+		// GET: Emergencies/Edit/5
+		public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
