@@ -1,18 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Saa3idWeb.Models;
 
 namespace Saa3idWeb.Data
 {
-	public class ApplicationDbContext : DbContext
+	public class ApplicationDbContext : IdentityDbContext
 	{
-		public ApplicationDbContext(DbContextOptions options) : base(options)
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
 		{
 		}
 
 		protected ApplicationDbContext()
 		{
 		}
+
 	    public DbSet<Saa3idWeb.Models.Sample> Sample { get; set; } = default!;
+		public DbSet<Saa3idWeb.Models.User> User { get; set; } = default!;
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -34,6 +37,7 @@ namespace Saa3idWeb.Data
 				entity.Property(e => e.Country).IsRequired();
 			});
 		}
-	    public DbSet<Saa3idWeb.Models.User> User { get; set; } = default!;
+
+		
 	}
 }
