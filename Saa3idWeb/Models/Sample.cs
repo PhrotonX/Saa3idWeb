@@ -3,6 +3,6 @@
 	public class Sample
 	{
 		public int Id { get; set; }
-		public String Name { get; set; }
+		public required string Name { get; set; }
 	}
 }
