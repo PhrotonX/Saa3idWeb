@@ -25,6 +25,15 @@ namespace Saa3idWeb.Controllers
             return View(await _context.Emergency.ToListAsync());
         }
 
+		[HttpGet("api/emergency")]
+		public async Task<IActionResult> IndexAPI()
+		{
+			return Json(new
+			{
+				emergencies = _context.Emergency.ToListAsync()
+			});
+		}
+
         // GET: Emergencies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -78,6 +87,7 @@ namespace Saa3idWeb.Controllers
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
+
 			return Json(new
 			{
 				success = true
@@ -138,20 +148,20 @@ namespace Saa3idWeb.Controllers
         // GET: Emergencies/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-            var emergency = await _context.Emergency
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (emergency == null)
-            {
-                return NotFound();
-            }
+			var emergency = await _context.Emergency
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (emergency == null)
+			{
+				return NotFound();
+			}
 
-            return View(emergency);
-        }
+			return View(emergency);
+		}
 
         // POST: Emergencies/Delete/5
         [HttpPost, ActionName("Delete")]
