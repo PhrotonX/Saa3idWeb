@@ -3,6 +3,11 @@
     "identityapp1": {
       "connectionInfo": "App registration: Saa3idWeb, Tenant: Default Directory (cpascual185gmail.onmicrosoft.com - Microsoft Entra ID)",
       "type": "identityapp.default"
+    },
+    "mssql1": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:Saa3idWebContextConnection"
     }
   }
 }
