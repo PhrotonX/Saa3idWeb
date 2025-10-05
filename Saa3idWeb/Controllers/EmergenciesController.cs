@@ -145,6 +145,8 @@ namespace Saa3idWeb.Controllers
             return View(emergency);
         }
 
+		protected async Task<IActionResult> Edit
+
         // GET: Emergencies/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
