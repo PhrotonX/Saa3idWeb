@@ -4,32 +4,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Saa3idWeb.Data;
 
-const string ENVIRONMENT = "Testing";
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
 
-var connectionString = "";
-switch (ENVIRONMENT)
-{
-	case "Testing":
-		connectionString = builder.Configuration.GetConnectionString("TestConnection");
-		break;
-	case "Deployment":
-		connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-		break;
-}
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => {
 	options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 	.AddEntityFrameworkStores<ApplicationDbContext>()
