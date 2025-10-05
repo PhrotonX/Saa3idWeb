@@ -51,5 +51,6 @@ namespace Saa3idWeb.Data
 			//	}	
 			//);
 		}
+	    public DbSet<Saa3idWeb.Models.Emergency> Emergency { get; set; } = default!;
 	}
 }
