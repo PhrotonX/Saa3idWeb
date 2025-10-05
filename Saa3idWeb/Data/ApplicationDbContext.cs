@@ -37,7 +37,19 @@ namespace Saa3idWeb.Data
 				entity.Property(e => e.Country).IsRequired();
 			});
 		}
+	    public DbSet<Saa3idWeb.Models.Location> Location { get; set; } = default!;
 
-		
+		protected void OnSeed(ModelBuilder builder)
+		{
+			//builder.Entity<Saa3idWeb.Models.Location>().HasData(
+			//	new Location
+			//	{
+			//		Id = 1,
+			//		Title = "",
+			//		Description = "This is a sample location",
+			//		Latitude = ""
+			//	}	
+			//);
+		}
 	}
 }

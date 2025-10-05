@@ -8,6 +8,10 @@
       "ignored": "true",
       "type": "mssql",
       "connectionId": "ConnectionStrings:Saa3idWebContextConnection"
+    },
+    "sqlite1": {
+      "ignored": "true",
+      "type": "sqlite"
     }
   }
 }
