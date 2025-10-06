@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Identity.Client;
 using Saa3idWeb.Data;
 using Saa3idWeb.Models;
 
@@ -25,12 +27,12 @@ namespace Saa3idWeb.Controllers
             return View(await _context.Emergency.ToListAsync());
         }
 
-		[HttpGet("api/emergency")]
+		[HttpGet("api/emergency"), ActionName("API.Emergency.Index")]
 		public async Task<IActionResult> IndexAPI()
 		{
 			return Json(new
 			{
-				emergencies = _context.Emergency.ToListAsync()
+				emergencies = await _context.Emergency.ToListAsync()
 			});
 		}
 
@@ -90,6 +92,7 @@ namespace Saa3idWeb.Controllers
 
 			return Json(new
 			{
+				emergency = emergency,
 				success = true
 			});
 		}
@@ -113,40 +116,71 @@ namespace Saa3idWeb.Controllers
         // POST: Emergencies/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPut]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Latitude,Longitude,CreatedAt,UpdatedAt,UserId")] Emergency emergency)
+        public async Task<IActionResult> Edit(int id,
+			[Bind("Id,Latitude,Longitude,CreatedAt,UpdatedAt,UserId")] Emergency emergency)
         {
-            if (id != emergency.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(emergency);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmergencyExists(emergency.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(emergency);
+			return await this.OnEdit(id, emergency, (data) => {
+				return RedirectToAction(nameof(Index));
+			}, (data) => {
+				return View(emergency);
+			});
         }
 
-        // GET: Emergencies/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+		[HttpPut("api/emergency/edit"), ]
+		public async Task<IActionResult> EditApi(int id,
+			[Bind("Id,Latitude,Longitude,CreatedAt,UpdatedAt,UserId")] Emergency emergency)
+		{
+			return await this.OnEdit(id, emergency, (data) => {
+				return Json(new
+				{
+					status = "Model is valid",
+				});
+			}, (data) => {
+				return Json(new
+				{
+					status = "Success",
+				});
+			});
+		}
+
+		protected async Task<IActionResult> OnEdit(int id,
+			Emergency emergency,
+			Func<Emergency, IActionResult> modelStateValidCallback,
+			Func<Emergency, IActionResult> successCallback)
+		{
+			if (id != emergency.Id)
+			{
+				return NotFound();
+			}
+
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					// Update into the DB.
+					_context.Update(emergency);
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!EmergencyExists(emergency.Id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				return modelStateValidCallback(emergency);
+			}
+			return successCallback(emergency);
+		}
+
+		// GET: Emergencies/Delete/5
+		public async Task<IActionResult> Delete(int? id)
         {
 			if (id == null)
 			{
@@ -168,17 +202,40 @@ namespace Saa3idWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var emergency = await _context.Emergency.FindAsync(id);
-            if (emergency != null)
-            {
-                _context.Emergency.Remove(emergency);
-            }
+			await this.OnDeleteConfirmed(id);
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+			return RedirectToAction(nameof(Index));
         }
 
-        private bool EmergencyExists(int id)
+		[HttpPost("api/emergency/delete"), ActionName("DeleteConfirmedApi")]
+		//[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteConfirmedApi(int id)
+		{
+			await this.OnDeleteConfirmed(id);
+
+			return Json(new
+			{
+				status = "Success",
+				redirect = "home"
+			});
+		}
+
+		/// <summary>
+		/// Event when resource deletion has been confirmed.
+		/// </summary>
+		/// <param name="id">The ID of the resource.</param>
+		protected async Task<int> OnDeleteConfirmed(int id)
+		{
+			var emergency = await _context.Emergency.FindAsync(id);
+			if (emergency != null)
+			{
+				_context.Emergency.Remove(emergency);
+			}
+
+			return await _context.SaveChangesAsync();
+		}
+
+		private bool EmergencyExists(int id)
         {
             return _context.Emergency.Any(e => e.Id == id);
         }
