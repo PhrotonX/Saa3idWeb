@@ -27,7 +27,7 @@ namespace Saa3idWeb.Controllers
             return View(await _context.Emergency.ToListAsync());
         }
 
-		[HttpGet("api/emergency")]
+		[HttpGet("api/emergency"), ActionName("API.Emergency.Index")]
 		public async Task<IActionResult> IndexAPI()
 		{
 			return Json(new
@@ -128,14 +128,14 @@ namespace Saa3idWeb.Controllers
 			});
         }
 
-		[HttpPut("api/emergencies/edit")]
-		public async Task<IActionResult> EditAPI(int id,
+		[HttpPut("api/emergency/edit"), ]
+		public async Task<IActionResult> EditApi(int id,
 			[Bind("Id,Latitude,Longitude,CreatedAt,UpdatedAt,UserId")] Emergency emergency)
 		{
 			return await this.OnEdit(id, emergency, (data) => {
 				return Json(new
 				{
-					status = "Failed",
+					status = "Model is valid",
 				});
 			}, (data) => {
 				return Json(new
@@ -207,7 +207,7 @@ namespace Saa3idWeb.Controllers
 			return RedirectToAction(nameof(Index));
         }
 
-		[HttpPost("api/emergencies/delete")]
+		[HttpPost("api/emergency/delete"), ActionName("DeleteConfirmedApi")]
 		//[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmedApi(int id)
 		{
