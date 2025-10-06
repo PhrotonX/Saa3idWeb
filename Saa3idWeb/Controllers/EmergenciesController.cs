@@ -90,6 +90,7 @@ namespace Saa3idWeb.Controllers
 
 			return Json(new
 			{
+				emergency = emergency,
 				success = true
 			});
 		}
@@ -144,8 +145,6 @@ namespace Saa3idWeb.Controllers
             }
             return View(emergency);
         }
-
-		protected async Task<IActionResult> Edit
 
         // GET: Emergencies/Delete/5
         public async Task<IActionResult> Delete(int? id)
