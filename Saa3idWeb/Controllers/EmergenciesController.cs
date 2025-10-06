@@ -197,8 +197,8 @@ namespace Saa3idWeb.Controllers
 			return View(emergency);
 		}
 
-        // POST: Emergencies/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // DELETE: Emergencies/Delete/5
+        [HttpDelete, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -207,7 +207,7 @@ namespace Saa3idWeb.Controllers
 			return RedirectToAction(nameof(Index));
         }
 
-		[HttpPost("api/emergency/delete"), ActionName("DeleteConfirmedApi")]
+		[HttpDelete("api/emergency/delete"), ActionName("DeleteConfirmedApi")]
 		//[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmedApi(int id)
 		{
@@ -215,7 +215,7 @@ namespace Saa3idWeb.Controllers
 
 			return Json(new
 			{
-				status = "Success",
+				status = "OK",
 				redirect = "home"
 			});
 		}
