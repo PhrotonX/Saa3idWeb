@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saa3idWeb", "Saa3idWeb\Saa3idWeb.csproj", "{2CE6F7A6-1E2D-47F2-9742-4831D8B8B9CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saa3idWebTests", "Saa3idWebTests\Saa3idWebTests.csproj", "{14C6178B-FBAD-4B97-B99E-805BD7F47366}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{2CE6F7A6-1E2D-47F2-9742-4831D8B8B9CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CE6F7A6-1E2D-47F2-9742-4831D8B8B9CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CE6F7A6-1E2D-47F2-9742-4831D8B8B9CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14C6178B-FBAD-4B97-B99E-805BD7F47366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14C6178B-FBAD-4B97-B99E-805BD7F47366}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14C6178B-FBAD-4B97-B99E-805BD7F47366}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14C6178B-FBAD-4B97-B99E-805BD7F47366}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
