@@ -2,7 +2,7 @@
 {
 	public class Hotline
 	{
-		public required int Id { get; set; }
+		public int Id { get; set; }
 		public required string Type { get; set; }
 		public required string Number { get; set; }
 		public string? Neighborhood { get; set; } = null;
