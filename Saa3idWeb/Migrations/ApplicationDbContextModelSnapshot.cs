@@ -246,6 +246,38 @@ namespace Saa3idWeb.Migrations
                     b.ToTable("Emergency");
                 });
 
+            modelBuilder.Entity("Saa3idWeb.Models.Hotline", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Neighborhood")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Province")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Hotline");
+                });
+
             modelBuilder.Entity("Saa3idWeb.Models.Location", b =>
                 {
                     b.Property<int>("Id")

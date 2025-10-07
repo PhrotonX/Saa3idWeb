@@ -52,6 +52,7 @@ namespace Saa3idWeb.Data
 			//	}	
 			//);
 		}
+	    public DbSet<Saa3idWeb.Models.Hotline> Hotline { get; set; } = default!;
 	    
 	}
 }
