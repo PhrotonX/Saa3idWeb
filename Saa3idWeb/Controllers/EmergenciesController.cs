@@ -52,7 +52,7 @@ namespace Saa3idWeb.Controllers
 			{
 				return Json(new
 				{
-					status = "ok",
+					status = "OK",
 					emergency = emergency,
 				});
 			});
@@ -113,7 +113,7 @@ namespace Saa3idWeb.Controllers
 
 			return Json(new
 			{
-				status = "ok",
+				status = "OK",
 				emergency = emergency,
 				success = true
 			});
@@ -157,7 +157,7 @@ namespace Saa3idWeb.Controllers
 			return await this.OnEdit(id, emergency, (data) => {
 				return Json(new
 				{
-					status = "ok",
+					status = "OK",
 				});
 			}, (data) => {
 				return Json(new
@@ -237,7 +237,7 @@ namespace Saa3idWeb.Controllers
 
 			return Json(new
 			{
-				status = "ok",
+				status = "OK",
 				redirect = "home"
 			});
 		}

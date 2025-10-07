@@ -12,6 +12,10 @@
     "sqlite1": {
       "ignored": "true",
       "type": "sqlite"
+    },
+    "apis1": {
+      "ignored": "True",
+      "type": "apis"
     }
   }
 }
