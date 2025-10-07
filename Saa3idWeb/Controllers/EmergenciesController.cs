@@ -39,20 +39,41 @@ namespace Saa3idWeb.Controllers
         // GET: Emergencies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var emergency = await _context.Emergency
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (emergency == null)
-            {
-                return NotFound();
-            }
-
-            return View(emergency);
+			return await this.OnGetDetails(id, (emergencyId, emergency) =>
+			{
+				return View(emergency);
+			});
         }
+
+		[HttpGet("api/emergency")]
+		public async Task<IActionResult> DetailsAPI(int? id)
+		{
+			return await this.OnGetDetails(id, (emergencyId, emergency) =>
+			{
+				return Json(new
+				{
+					status = "ok",
+					emergency = emergency,
+				});
+			});
+		}
+
+		protected async Task<IActionResult> OnGetDetails(int? id, Func<int?, Emergency, IActionResult> successCallback)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var emergency = await _context.Emergency
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (emergency == null)
+			{
+				return NotFound();
+			}
+
+			return successCallback(id, emergency);
+		}
 
         // GET: Emergencies/Create
         public IActionResult Create()
@@ -92,6 +113,7 @@ namespace Saa3idWeb.Controllers
 
 			return Json(new
 			{
+				status = "ok",
 				emergency = emergency,
 				success = true
 			});
@@ -135,12 +157,12 @@ namespace Saa3idWeb.Controllers
 			return await this.OnEdit(id, emergency, (data) => {
 				return Json(new
 				{
-					status = "Model is valid",
+					status = "ok",
 				});
 			}, (data) => {
 				return Json(new
 				{
-					status = "Success",
+					status = "error",
 				});
 			});
 		}
@@ -215,7 +237,7 @@ namespace Saa3idWeb.Controllers
 
 			return Json(new
 			{
-				status = "OK",
+				status = "ok",
 				redirect = "home"
 			});
 		}
