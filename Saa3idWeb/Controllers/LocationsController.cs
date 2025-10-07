@@ -85,7 +85,7 @@ namespace Saa3idWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Latitude,Longitude,LocationType")] Location location)
+        public async Task<IActionResult> Create([Bind("Title,Description,Latitude,Longitude,LocationType")] Location location)
         {
 			return await this.OnCreate(location, (data) => {
 				return RedirectToAction(nameof(Index));
@@ -96,7 +96,7 @@ namespace Saa3idWeb.Controllers
 
 		[HttpPost("api/location/create")]
 		//[ValidateAntiForgeryToken]
-		public async Task<IActionResult> CreateAPI([Bind("Id,Title,Description,Latitude,Longitude,LocationType")] Location location)
+		public async Task<IActionResult> CreateAPI([Bind("Title,Description,Latitude,Longitude,LocationType")] Location location)
 		{
 			return await this.OnCreate(location, (data) => {
 				return Json(new
@@ -110,7 +110,7 @@ namespace Saa3idWeb.Controllers
 				{
 					location = location,
 					status = "Error",
-					redirect = "home",
+					redirect = "location/create",
 				});
 			});
 		}
@@ -150,7 +150,7 @@ namespace Saa3idWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPut]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Latitude,Longitude,LocationType")] Location location)
+        public async Task<IActionResult> Edit(int id, [Bind("Title,Description,Latitude,Longitude,LocationType")] Location location)
         {
 			return await this.OnEdit(id, location, (dataId, data) =>
 			{
