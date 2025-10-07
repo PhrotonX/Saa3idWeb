@@ -8,5 +8,7 @@
 		public string? Neighborhood { get; set; } = null;
 		public required string City { get; set; }
 		public required string Province { get; set; }
+		public DateTime CreatedAt { get; set; } = DateTime.Now;
+		public DateTime UpdatedAt { get; set; } = DateTime.Now;
 	}
 }
