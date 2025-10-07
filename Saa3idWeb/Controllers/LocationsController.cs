@@ -239,22 +239,22 @@ namespace Saa3idWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var location = await _context.Location.FindAsync(id);
-            if (location != null)
-            {
-                _context.Location.Remove(location);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+			return await this.OnDeleteConfirmed(id, () =>
+			{
+				return RedirectToAction(nameof(Index));
+			});
+		}
 
 		[HttpDelete("api/location/delete/{id}")]
 		public async Task<IActionResult> DeleteConfirmedAPI(int id)
 		{
 			return await this.OnDeleteConfirmed(id, () =>
 			{
-				return RedirectToAction(nameof(Index));
+				return Json(new
+				{
+					status = "OK",
+					redirect = "home",
+				});
 			});
 		}
 
