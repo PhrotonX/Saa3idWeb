@@ -2,7 +2,7 @@
 {
 	public class Location
 	{
-		public required int Id { get; set; }
+		public int Id { get; set; }
 		public required string Title { get; set; }
 		public string? Description { get; set; } = null;
 		public required DateTime CreatedAt { get; set; } = DateTime.Now;
