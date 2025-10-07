@@ -30,7 +30,7 @@ namespace Saa3idWeb.Controllers
 		{
 			return Json(new
 			{
-				status = "ok",
+				status = "OK",
 				hotlines = await _context.Hotline.ToListAsync(),
 			});
 		}
@@ -52,7 +52,7 @@ namespace Saa3idWeb.Controllers
 			{
 				return Json(new
 				{
-					status = "ok",
+					status = "OK",
 					hotline = hotline,
 				});
 			});
@@ -159,7 +159,7 @@ namespace Saa3idWeb.Controllers
 			return await this.OnEdit(id, hotline, (hotlineID, hotline) => {
 				return Json(new
 				{
-					status = "ok",
+					status = "OK",
 					redirect = "hotlines",
 					hotline = hotline,
 				});
@@ -240,7 +240,7 @@ namespace Saa3idWeb.Controllers
 			{
 				return Json(new
 				{
-					status = "ok",
+					status = "OK",
 					redirect = "hotlines",
 				});
 			});
