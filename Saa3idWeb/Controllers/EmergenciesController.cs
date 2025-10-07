@@ -45,7 +45,7 @@ namespace Saa3idWeb.Controllers
 			});
         }
 
-		[HttpGet("api/emergency")]
+		[HttpGet("api/emergency/{id}")]
 		public async Task<IActionResult> DetailsAPI(int? id)
 		{
 			return await this.OnGetDetails(id, (emergencyId, emergency) =>

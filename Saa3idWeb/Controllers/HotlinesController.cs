@@ -25,6 +25,16 @@ namespace Saa3idWeb.Controllers
             return View(await _context.Hotline.ToListAsync());
         }
 
+		[HttpGet("api/hotlines/")]
+		public async Task<IActionResult> IndexAPI()
+		{
+			return Json(new
+			{
+				status = "ok",
+				hotlines = await _context.Hotline.ToListAsync(),
+			});
+		}
+
         // GET: Hotlines/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -35,7 +45,7 @@ namespace Saa3idWeb.Controllers
 			});
         }
 
-		[HttpGet("api/hotline")]
+		[HttpGet("api/hotlines/{id}")]
 		public async Task<IActionResult> DetailsAPI(int? id)
 		{
 			return await this.OnGetDetails(id, (hotlineId, hotline) =>
@@ -85,7 +95,7 @@ namespace Saa3idWeb.Controllers
 			});
         }
 
-		[HttpPost("api/hotline/create")]
+		[HttpPost("api/hotlines/create")]
 		public async Task<IActionResult> CreateAPI([Bind("Id,Type,Number,Neighborhood,City,Province")] Hotline hotline)
 		{
 			return await this.OnCreate(hotline, (data) => {
@@ -143,14 +153,14 @@ namespace Saa3idWeb.Controllers
 			});
         }
 
-		[HttpPut("api/hotline/edit")]
+		[HttpPut("api/hotlines/edit")]
 		public async Task<IActionResult> EditAPI(int id, [Bind("Id,Type,Number,Neighborhood,City,Province")] Hotline hotline)
 		{
 			return await this.OnEdit(id, hotline, (hotlineID, hotline) => {
 				return Json(new
 				{
 					status = "ok",
-					redirect = "hotline/view",
+					redirect = "hotlines",
 					hotline = hotline,
 				});
 			}, (hotlineId, hotline) => {
@@ -223,7 +233,7 @@ namespace Saa3idWeb.Controllers
 			});
 		}
 
-		[HttpDelete("api/hotline/delete")]
+		[HttpDelete("api/hotlines/delete")]
 		public async Task<IActionResult> DeleteConfirmedAPI(int id)
 		{
 			return await this.OnDeleteConfirmed(id, (hotlineId) =>
@@ -231,7 +241,7 @@ namespace Saa3idWeb.Controllers
 				return Json(new
 				{
 					status = "ok",
-					redirect = "hotline",
+					redirect = "hotlines",
 				});
 			});
 		}
