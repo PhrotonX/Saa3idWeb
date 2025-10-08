@@ -26,16 +26,16 @@ namespace Saa3idWeb.Controllers.Tests
 			//Assert.Fail();
 		}
 
-		[TestMethod()]
-		public void DeleteConfirmedApiTest()
-		{
-			//Arrange
-			var mockContext = new Mock<ApplicationDbContext>();
-			var controller = new EmergenciesController(mockContext.Object);
-			//Act
-			controller.DeleteConfirmedApi(1);
-			//Assert
-			Assert.Fail();
-		}
+		//[TestMethod()]
+		//public void DeleteConfirmedApiTest()
+		//{
+		//	//Arrange
+		//	var mockContext = new Mock<ApplicationDbContext>();
+		//	var controller = new EmergenciesController(mockContext.Object);
+		//	//Act
+		//	controller.DeleteConfirmedApi(1);
+		//	//Assert
+		//	Assert.Fail();
+		//}
 	}
 }

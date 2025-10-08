@@ -5,17 +5,20 @@
 | Route | Request Type | Action Name | Description | Parameters | Return Value |
 | - | - | - | - | - | - |
 | [api/emergency/](#apiemergency) | GET |  | Obtains an array of emergencies. | | |
-| [api/emergency/{id}]() | GET | | Obtains a single emergency data. | | |
-| api/emergency/create | POST | API.Emergency.Create | Submits an emergency data into the DB. | Id,Latitude,Longitude,UserId | emergency, success
-| api/emergency/update/{id} | PUT | API.Emergency.Update | Updates an emergency data from the DB. | Id - Emergency ID | status |
+| [api/emergency/{id}](#apiemergencyid) | GET | | Obtains a single emergency data. | | |
+| [api/emergency/search](#apiemergencysearch) | GET | | Searches for emergency data from the DB. | | |
+| [api/emergency/create](#apiemergencycreate) | POST | | Submits an emergency data into the DB. |  | 
+| [api/emergency/update/{id}](#apiemergencyupdateid) | PUT | | Updates an emergency data from the DB. | | |
 | api/emergency/delete/{id} | DELETE | API.Emergency.DeleteConfirmed | Deletes an emergency data from the DB. | Id - Emergency ID | status, redirect |
 | api/hotline/ | GET |  | Obtains an array of hotlines. | | hotline (array) - Each item contains key-value pair of elements |
 | api/hotline/{id} | GET | | Obtains a single hotline data. | Id - Hotline ID | hotline, status |
+| [api/hotline/search]() | GET | | Searches for hotline data from the DB. | | |
 | api/hotline/create | POST |  | Submits a hotline data into the DB. | Id,Latitude,Longitude,UserId | hotline, status
 | api/hotline/update/{id} | PUT | | Updates a hotline data from the DB. | Id - Hotline ID | status, redirect, hotline |
 | api/hotline/delete/{id} | DELETE |  | Deletes a hotline data from the DB. | Id - Hotline ID | status, redirect |
 | [api/location/](#apilocation) | GET |  | Obtains an array of locations. | | |
 | [api/location/{id}](#apilocationid) | GET | | Obtains a single location data. |  |  |
+| [api/location/search](#apilocationsearch) | POST |  | Searches location data from the DB. |  | 
 | [api/location/create](#apilocationcreate) | POST |  | Submits a location data into the DB. |  | 
 | [api/location/update/{id}](#apilocationupdateid) | PUT | | Updates a location data from the DB. |  |  |
 | [api/location/delete/{id}](#apilocationdeleteid) | DELETE |  | Deletes a location data from the DB. |  |  |
@@ -37,6 +40,15 @@
     "LocationType":"evacuation_center"
 }
 ```
+- APIs may require a query string. These query strings starts with a question mark on its URL
+    - Spaces on query strings are represented by %20.
+    - Multiple queries are split by "&amp;" symbol.
+    - Each query string are represented by key=value pair.
+    - Example:
+```
+    http://127.0.0.1:8080/api/emergency/search?title=title%20here&description=this_is_a%20description.
+```
+
 
 ## Details
 ### api/emergency/
@@ -52,6 +64,55 @@
 - **emergency:** A single Emergency data
 - **status**
     - Returns **"OK"** if request is valid.
+
+### api/emergency/search
+**Query Strings:**
+- **userId?**
+    - The ID of the associated user account.
+- **lat?**
+	- Latitude
+- **lng?**
+	- Longitude
+**Returns:**
+- **results**
+    - Returns an array of emergency data.
+
+### api/emergency/create
+**Action Name:** API.Emergency.Create
+**Request Content:**
+- **Latitude**
+- **Longitude**
+- **UserId:** The associated user ID or the ID of the user who created the data. It can be 0 if anonymous or not available.
+**Returns:**
+- **status:**
+    - Returns "OK".
+- **emergency**
+    - Returns the newly created emergency data.
+- **success (deprecated)**
+    - Returns true.
+
+### api/emergency/update/{id}
+**Action Name:** API.Emergency.Update
+**Parameters:**
+- **id:** The ID of emergency data.
+**Request Content:**
+- **Latitude**
+- **Longitude**
+- **UserId:** The associated user ID or the ID of the user who created the data. It can be 0 if anonymous or not available. It is recommended to ignore or avoid changing this data.
+**Returns:**
+- **status:**
+    - Returns "OK" if it succeed, "Error" otherwise.
+
+### api/hotline/search
+**Query Strings:**
+- **type?**
+- **number?**
+- **neighborhood?**
+- **city?**
+- **province?**
+**Returns:**
+- **results**
+    - Returns an array of hotline data.
     
 ### api/location/
 **Returns:**
@@ -68,8 +129,20 @@
     - Returns **"location"** if the model state is valid. This shall navigate the front-end into location details page.
 - **location** - Returns the location data.
 
+### api/location/search
+**Query Strings:**
+- **title?**
+- **description?**
+- **lat?**
+	- Latitude
+- **lng?**
+	- Longitude
+**Returns:**
+- **results**
+    - Returns an array of location data. 
+
 ### api/location/create
-**Request Parameters**
+**Request Content**
 - Location model: Title,Description,Latitude,Longitude,LocationType
 **Returns:**
 - **status**
@@ -81,7 +154,7 @@
 - **location** - Returns the new location data.
 
 ### api/location/update/{id}
-**Request Parameters**
+**Request Content**
 - Location model: Title,Description,Latitude,Longitude,LocationType
 **Parameters:**
 - **Id** - Location ID

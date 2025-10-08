@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Saa3idWeb.Data;
 using Saa3idWeb.Models;
+using Saa3idWeb.Util;
 
 namespace Saa3idWeb.Controllers
 {
@@ -72,6 +73,45 @@ namespace Saa3idWeb.Controllers
 			}
 
 			return View(location);
+		}
+
+		[HttpGet("api/location/search")]
+		public async Task<IActionResult> SearchApi(String? title, String? description, float? latitude, float? longitude)
+		{
+			return Json(new
+			{
+				results = await this.OnSearch(title, description, latitude, longitude),
+			});
+		}
+
+		protected async Task<List<Location>> OnSearch(String? title = null, String? description = null, float? lat = null, float? lng = null)
+		{
+			SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+
+			selectQueryBuilder.AddField("*");
+
+			if (title != null && title != "" && title != " ")
+			{
+				selectQueryBuilder.AddCondition($"Title LIKE '%{title}%'", "AND");
+			}
+			if(description != null && description != "" && description != " ")
+			{
+				selectQueryBuilder.AddCondition($"Description LIKE '%{description}%'", "AND");
+			}
+			if(lat != null)
+			{
+				selectQueryBuilder.AddCondition($"Latitude LIKE {lat}", "AND");
+			}
+			if(lng != null)
+			{
+				selectQueryBuilder.AddCondition($"Longitude LIKE {lng}");
+			}
+
+			selectQueryBuilder.SetTable("location");
+
+			String query = selectQueryBuilder.Build();
+
+			return await _context.Location.FromSqlRaw<Location>(query).ToListAsync();
 		}
 
         // GET: Locations/Create

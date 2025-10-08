@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
 using Saa3idWeb.Data;
 using Saa3idWeb.Models;
+using Saa3idWeb.Util;
 
 namespace Saa3idWeb.Controllers
 {
@@ -75,8 +76,43 @@ namespace Saa3idWeb.Controllers
 			return successCallback(id, emergency);
 		}
 
-        // GET: Emergencies/Create
-        public IActionResult Create()
+		[HttpGet("api/emergency/search")]
+		public async Task<IActionResult> SearchAPI(float? lng, float? lat, int? userId)
+		{
+			return Json(new
+			{
+				results = this.OnSearch(lat, lng, userId)
+			});
+		}
+
+		protected async Task<List<Emergency>> OnSearch(float? lng, float? lat, int? userId)
+		{
+			SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+
+			selectQueryBuilder.AddField("*");
+
+			if (lat != null)
+			{
+				selectQueryBuilder.AddCondition($"Latitude LIKE {lat}", "AND");
+			}
+			if (lng != null)
+			{
+				selectQueryBuilder.AddCondition($"Longitude LIKE {lng}", "AND");
+			}
+			if(userId != null)
+			{
+				selectQueryBuilder.AddCondition($"UserId = {userId}", "AND");
+			}
+
+			selectQueryBuilder.SetTable("emergency");
+
+			String query = selectQueryBuilder.Build();
+
+			return await _context.Emergency.FromSqlRaw<Emergency>(query).ToListAsync();
+		}
+
+		// GET: Emergencies/Create
+		public IActionResult Create()
         {
             return View();
         }
