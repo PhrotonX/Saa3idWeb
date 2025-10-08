@@ -75,6 +75,16 @@ namespace Saa3idWeb.Controllers
 			return successCallback(id, emergency);
 		}
 
+		//protected async Task<IActionResult> OnSearch(
+		//	float? lng,
+		//	float? lat,
+		//	int? userId
+		//)
+		//{
+		//	//var results = _context.Emergency.FromSqlRaw("SELECT * FROM ")
+
+		//}
+
         // GET: Emergencies/Create
         public IActionResult Create()
         {
