@@ -161,18 +161,18 @@ namespace Saa3idWeb.Util.Tests
 			// Arrange
 			SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder()
 				.AddField("*")
-				.AddCondition("F1 > 1")
-				.AddCondition("F2 < 1")
-				.AddCondition("F3 = 1")
-				.AddCondition("F4 <> 1")
-				.AddCondition("F5 <= 1")
+				.AddCondition("F1 > 1", "AND")
+				.AddCondition("F2 < 1", "AND")
+				.AddCondition("F3 = 1", "AND")
+				.AddCondition("F4 <> 1", "AND")
+				.AddCondition("F5 <= 1", "AND")
 				.SetTable("TableName");
 
 			// Act
 			var result = selectQueryBuilder.Build();
 
 			// Assert
-			Assert.AreEqual("SELECT * FROM TableName WHERE F1 > 1, F2 < 1, F3 = 1, F4 <> 1, F5 <= 1", result);
+			Assert.AreEqual("SELECT * FROM TableName WHERE F1 > 1 AND F2 < 1 AND F3 = 1 AND F4 <> 1 AND F5 <= 1", result);
 		}
 
 		[TestMethod()]

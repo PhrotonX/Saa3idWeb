@@ -12,6 +12,7 @@ namespace Saa3idWeb.Util
 		internal string query = "SELECT ";
 		internal List<String> fields = new List<string>();
 		internal List<String> condition = new List<string>();
+		internal List<String> connector = new List<string>();
 		internal string tableName = "";
 		internal List<String> order = new List<String>();
 		internal int limit = 0;
@@ -35,28 +36,15 @@ namespace Saa3idWeb.Util
 
 		public SelectQueryBuilder AddCondition(String condition, String connector = "")
 		{
-			if(connector == "")
-			{
-				this.condition.Add(condition);
-			}
-			else
-			{
-				this.condition.Add(condition + " " + connector);
-			}
-
+			this.condition.Add(condition);
+			this.connector.Add(connector);
 			return this;
 		}
 
 		public SelectQueryBuilder AddCondition(String lvalue, String op, String rvalue, String connector = "")
 		{
-			if (connector == "")
-			{
-				this.condition.Add(lvalue + " " + op + " " + rvalue);
-			}
-			else
-			{
-				this.condition.Add(lvalue + " " + op + " " + rvalue + " " + connector);
-			}
+			this.condition.Add(lvalue + " " + op + " " + rvalue);
+			this.condition.Add(connector);
 			return this;
 		}
 
@@ -95,14 +83,15 @@ namespace Saa3idWeb.Util
 			for(int i = 0; i < this.condition.Count; i++)
 			{
 				string? condition = this.condition[i];
+				string? connector = this.connector[i];
 
-				if(i == this.condition.Count - 1)
+				if (i == this.condition.Count - 1)
 				{
 					this.query += condition;
 				}
 				else
 				{
-					this.query += condition + ", ";
+					this.query += condition + " " + connector + " ";
 				}
 			}
 
