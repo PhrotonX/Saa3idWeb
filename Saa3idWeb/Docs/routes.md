@@ -12,7 +12,7 @@
 | api/emergency/delete/{id} | DELETE | API.Emergency.DeleteConfirmed | Deletes an emergency data from the DB. | Id - Emergency ID | status, redirect |
 | api/hotline/ | GET |  | Obtains an array of hotlines. | | hotline (array) - Each item contains key-value pair of elements |
 | api/hotline/{id} | GET | | Obtains a single hotline data. | Id - Hotline ID | hotline, status |
-| [api/hotline/search]() | GET | | Searches for hotline data from the DB. | | |
+| [api/hotline/search](#apihotlinesearch) | GET | | Searches for hotline data from the DB. | | |
 | api/hotline/create | POST |  | Submits a hotline data into the DB. | Id,Latitude,Longitude,UserId | hotline, status
 | api/hotline/update/{id} | PUT | | Updates a hotline data from the DB. | Id - Hotline ID | status, redirect, hotline |
 | api/hotline/delete/{id} | DELETE |  | Deletes a hotline data from the DB. | Id - Hotline ID | status, redirect |
