@@ -31,6 +31,7 @@
 - APIs may return HTTP status responses.
     - Error 404 if a specified resource does not exist. For instance, submitting ID 5 on a route wherein the database only consists of item IDs 1-4 throws error 404.
 - APIs may require entity models in a JSON format. Typically found in POST, PUT, and PATCH requests. These require setting up JSON keys to correspond into a DB field. For instance, an entity model named Location requiring Title,Description,Latitude,Longitude,LocationType shall have the following JSON data into an HTTP request:
+- Parameters with "?" are optional.
 ```json
 {
     "Title": "Sample Title",
