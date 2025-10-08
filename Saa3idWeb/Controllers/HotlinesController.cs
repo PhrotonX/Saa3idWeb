@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Saa3idWeb.Data;
 using Saa3idWeb.Models;
+using Saa3idWeb.Util;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Saa3idWeb.Controllers
 {
@@ -75,8 +76,62 @@ namespace Saa3idWeb.Controllers
 			return successCallback(id, hotline);
 		}
 
-        // GET: Hotlines/Create
-        public IActionResult Create()
+		public async Task<IActionResult> SearchAPI(
+			string? type,
+			string? number,
+			string? neighborhood,
+			string? city,
+			string? province
+		)
+		{
+			return Json(new
+			{
+				results = this.OnSearch(type, number, neighborhood, city, province),
+			});
+		}
+
+		protected async Task<List<Hotline>> OnSearch(
+			string? type,
+			string? number,
+			string? neighborhood,
+			string? city,
+			string? province
+		)
+		{
+			SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+
+			selectQueryBuilder.AddField("*");
+
+			if (type != null && type != "" && type != " ")
+			{
+				selectQueryBuilder.AddCondition($"Type LIKE '%{type}%'", "AND");
+			}
+			if (number != null && number != "" && number != " ")
+			{
+				selectQueryBuilder.AddCondition($"Number LIKE '%{type}%'", "AND");
+			}
+			if (neighborhood != null && neighborhood != "" && neighborhood != " ")
+			{
+				selectQueryBuilder.AddCondition($"Neighborhood LIKE '%{type}%'", "AND");
+			}
+			if (city != null && city != "" && city != " ")
+			{
+				selectQueryBuilder.AddCondition($"City LIKE '%{type}%'", "AND");
+			}
+			if (province != null && province != "" && province != " ")
+			{
+				selectQueryBuilder.AddCondition($"Province LIKE '%{type}%'", "AND");
+			}
+
+			selectQueryBuilder.SetTable("hotline");
+
+			String query = selectQueryBuilder.Build();
+
+			return await _context.Hotline.FromSqlRaw<Hotline>(query).ToListAsync();
+		}
+
+		// GET: Hotlines/Create
+		public IActionResult Create()
         {
             return View();
         }
