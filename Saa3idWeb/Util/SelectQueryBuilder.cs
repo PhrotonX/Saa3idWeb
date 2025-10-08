@@ -10,10 +10,11 @@ namespace Saa3idWeb.Util
 	public class SelectQueryBuilder
 	{
 		internal string query = "SELECT ";
-		internal string[] fields = { };
-		internal string[] condition = { };
+		internal List<String> fields = new List<string>();
+		internal List<String> condition = new List<string>();
 		internal string tableName = "";
-		internal string order = "";
+		internal List<String> order = new List<String>();
+		internal int limit = 0;
 		public SelectQueryBuilder() { }
 
 		/// <summary>
@@ -21,81 +22,124 @@ namespace Saa3idWeb.Util
 		/// </summary>
 		/// <param name="field">The field name as part of the query</param>
 		/// <returns>QueryBuilder</returns>
-		public SelectQueryBuilder AddField(Object field, bool lowercase = false)
+		public SelectQueryBuilder AddField(String fieldname, bool lowercase = false)
 		{
-			String fieldname = nameof(field);
-
 			if (lowercase)
 			{
 				fieldname = fieldname.ToLower();
 			}
 
-			this.fields.Append<Object>(lowercase);
-			return this;
-		}
-
-		public SelectQueryBuilder AddStringField(String field)
-		{
-			this.fields.Append(field);
+			this.fields.Add(fieldname);
 			return this;
 		}
 
 		public SelectQueryBuilder AddCondition(String condition, String connector = "")
 		{
-			this.condition.Append(condition + " " + connector);
+			if(connector == "")
+			{
+				this.condition.Add(condition);
+			}
+			else
+			{
+				this.condition.Add(condition + " " + connector);
+			}
+
+			return this;
+		}
+
+		public SelectQueryBuilder AddCondition(String lvalue, String op, String rvalue, String connector = "")
+		{
+			if (connector == "")
+			{
+				this.condition.Add(lvalue + " " + op + " " + rvalue);
+			}
+			else
+			{
+				this.condition.Add(lvalue + " " + op + " " + rvalue + " " + connector);
+			}
+			return this;
+		}
+
+		public SelectQueryBuilder AddOrder(String fieldname, String order)
+		{
+			this.order.Add(fieldname + " " + order);
 			return this;
 		}
 
 		public String Build()
 		{
 			// Append the field names
-			for (int i = 0; i < fields.Length; i++)
+			for (int i = 0; i < this.fields.Count; i++)
 			{
 				string? field = this.fields[i];
 
-				if(i == fields.Length - 1)
+				if(i == this.fields.Count - 1)
 				{
 					this.query += field;
 				}
 				else
 				{
-					this.query += field + ",";
+					this.query += field + ", ";
 				}
 			}
 
 			// Append the table name.
 			this.query += $" FROM {this.tableName}";
 
-			if(this.fields.Length > 0)
+			if(this.condition.Count > 0)
 			{
 				this.query += " WHERE ";
 			}
 
 			// Append the conditions with connectors.
-			for(int i = 0; i < fields.Length; i++)
+			for(int i = 0; i < this.condition.Count; i++)
 			{
 				string? condition = this.condition[i];
 
-				if(i < fields.Length - 1)
+				if(i == this.condition.Count - 1)
 				{
 					this.query += condition;
 				}
 				else
 				{
-					this.query += condition + ",";
+					this.query += condition + ", ";
 				}
 			}
 
-			// Append the order query.
-			this.query += order;
+			// Append the order keyword.
+			if(this.order.Count > 0)
+			{
+				this.query += " ORDER BY ";
+			}
+
+			// Append the order queries.
+			for (int i = 0; i < this.order.Count; i++)
+			{
+				string? order = this.order[i];
+
+				if (i == this.order.Count - 1)
+				{
+					this.query += order;
+				}
+				else
+				{
+					this.query += order + ", ";
+				}
+			}
+
+			// Append the limit
+			if(limit > 0)
+			{
+				this.query += " LIMIT " + limit;
+			}
 
 			// Return the string query.
 			return this.query;
 		}
 
-		public SelectQueryBuilder SetOrder(String order)
+		public SelectQueryBuilder SetLimit(int limit)
 		{
-			this.order = order;
+			this.limit = limit;
 			return this;
 		}
 
