@@ -13,7 +13,7 @@ namespace Saa3idWeb.Models
 		public string? MiddleName { get; set; } = null;
 		[Required(ErrorMessage = "Last name is required."), StringLength(255, ErrorMessage = "Last name has a minimum of 3 and a maximum of 255 characters.", MinimumLength = 3)]
 		public required string LastName { get; set; }
-		[StringLength(255, ErrorMessage = "Middle name has a maximum of 255 characters.")]
+		[StringLength(255, ErrorMessage = "Ext name has a maximum of 255 characters.")]
 		public string? ExtName { get; set; } = null;
 		[AllowedValues(['F', 'M']), Required(ErrorMessage = "Gender is required")]
 		public char? Gender { get; set; } = null;

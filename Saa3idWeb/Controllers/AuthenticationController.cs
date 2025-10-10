@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Saa3idWeb.Auth;
 using Saa3idWeb.Data;
 using Saa3idWeb.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -65,30 +66,71 @@ namespace Saa3idWeb.Controllers
 			return Unauthorized();
 		}
 
-		[HttpPost("register")]
+		[HttpPost]
+		[Route("register")]
 		//[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Register([Bind("FirstName,MiddleName,LastName,ExtName,Email,Password,HomeAddress,Neighborhood,City,Province,Country")] User user)
+		public async Task<IActionResult> Register([Bind("FirstName,MiddleName,LastName,ExtName,HomeAddress,Neighborhood,City,Province,Country")] Saa3idWeb.Auth.Register model)
 		{
 			if (ModelState.IsValid)
 			{
-				//@TODO: Implement Password Hashing Algorithm
-				//@TODO: Implement Validation
-				//@TODO: Implement Session Handling
+				var userExists = this.userManager.FindByNameAsync(model.UserName);
+
+				if(userExists != null)
+				{
+					return StatusCode(500, new
+					{
+						status = "Error",
+						redirect = "register",
+						message = "User already exists",
+						user = model,
+					});
+				}
+
+				User newUser = new User()
+				{
+					UserName = model.UserName,
+					FirstName = model.FirstName,
+					MiddleName = model.MiddleName,
+					LastName = model.LastName,
+					ExtName = model.ExtName,
+					Email = model.Email,
+					Gender = model.Gender,
+					HomeAddress = model.HomeAddress,
+					Neighborhood = model.Neighborhood,
+					City = model.City,
+					Province = model.Province,
+					Country = model.Country,
+					UserType = model.UserType,
+
+					SecurityStamp = Guid.NewGuid().ToString(),
+				};
+
+				var result = await this.userManager.CreateAsync(newUser, model.Password);
+				if (!result.Succeeded)
+				{
+					return StatusCode(500, new
+					{
+						status = "Error",
+						redirect = "register",
+						message = "Incorrect credentials",
+						user = model,
+					});
+				}
 				
-				context.Add(user);
-				await context.SaveChangesAsync();
+				//context.Add(user);
+				//await context.SaveChangesAsync();
 				return Json(new
 				{
 					status = "OK",
 					redirect = "home",
-					user
+					user = model,
 				});
 			}
 			return Json(new
 			{
 				status = "Error",
 				redirect = "register",
-				user
+				user = user,
 			});
 		}
 	}
