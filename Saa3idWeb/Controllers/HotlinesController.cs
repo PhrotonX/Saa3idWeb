@@ -81,7 +81,7 @@ namespace Saa3idWeb.Controllers
 			return successCallback(id, hotline);
 		}
 
-		[HttpGet("apit/hotline/search")]
+		[HttpGet("api/hotline/search")]
 		[AllowAnonymous]
 		public async Task<IActionResult> SearchAPI(
 			string? type,
