@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Saa3idWeb.Data;
@@ -20,13 +21,15 @@ namespace Saa3idWeb.Controllers
             _context = context;
         }
 
-        // GET: Hotlines
+		// GET: Hotlines
+		[AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Hotline.ToListAsync());
         }
 
 		[HttpGet("api/hotline/")]
+		[AllowAnonymous]
 		public async Task<IActionResult> IndexAPI()
 		{
 			return Json(new
@@ -36,8 +39,9 @@ namespace Saa3idWeb.Controllers
 			});
 		}
 
-        // GET: Hotlines/Details/5
-        public async Task<IActionResult> Details(int? id)
+		// GET: Hotlines/Details/5
+		[AllowAnonymous]
+		public async Task<IActionResult> Details(int? id)
         {
 
 			return await this.OnGetDetails(id, (hotlineId, hotline) =>
@@ -47,6 +51,7 @@ namespace Saa3idWeb.Controllers
         }
 
 		[HttpGet("api/hotline/{id}")]
+		[AllowAnonymous]
 		public async Task<IActionResult> DetailsAPI(int? id)
 		{
 			return await this.OnGetDetails(id, (hotlineId, hotline) =>
@@ -77,6 +82,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		[HttpGet("apit/hotline/search")]
+		[AllowAnonymous]
 		public async Task<IActionResult> SearchAPI(
 			string? type,
 			string? number,
@@ -132,6 +138,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		// GET: Hotlines/Create
+		[Authorize]
 		public IActionResult Create()
         {
             return View();
@@ -142,6 +149,7 @@ namespace Saa3idWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+		[Authorize]
         public async Task<IActionResult> Create([Bind("Id,Type,Number,Neighborhood,City,Province")] Hotline hotline)
         {
 			return await this.OnCreate(hotline, (data) => {
@@ -152,6 +160,7 @@ namespace Saa3idWeb.Controllers
         }
 
 		[HttpPost("api/hotline/create")]
+		[Authorize]
 		public async Task<IActionResult> CreateAPI([Bind("Id,Type,Number,Neighborhood,City,Province")] Hotline hotline)
 		{
 			return await this.OnCreate(hotline, (data) => {
@@ -180,6 +189,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		// GET: Hotlines/Edit/5
+		[Authorize]
 		public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -200,6 +210,7 @@ namespace Saa3idWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPut]
         [ValidateAntiForgeryToken]
+		[Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Number,Neighborhood,City,Province")] Hotline hotline)
         {
 			return await this.OnEdit(id, hotline, (hotlineID, hotline) => {
@@ -210,6 +221,7 @@ namespace Saa3idWeb.Controllers
         }
 
 		[HttpPut("api/hotline/update")]
+		[Authorize]
 		public async Task<IActionResult> EditAPI(int id, [Bind("Id,Type,Number,Neighborhood,City,Province")] Hotline hotline)
 		{
 			return await this.OnEdit(id, hotline, (hotlineID, hotline) => {
@@ -261,6 +273,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		// GET: Hotlines/Delete/5
+		[Authorize]
 		public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -281,6 +294,7 @@ namespace Saa3idWeb.Controllers
         // DELETE: Hotlines/Delete/5
         [HttpDelete, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+		[Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
 			return await this.OnDeleteConfirmed(id, (hotlineId) =>
@@ -290,6 +304,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		[HttpDelete("api/hotline/delete")]
+		[Authorize]
 		public async Task<IActionResult> DeleteConfirmedAPI(int id)
 		{
 			return await this.OnDeleteConfirmed(id, (hotlineId) =>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		[HttpPost("login")]
+		[AllowAnonymous]
 		public async Task<IActionResult> Login([FromBody]Saa3idWeb.Auth.Login login)
 		{
 			//Check if user does not exist.
@@ -53,6 +55,7 @@ namespace Saa3idWeb.Controllers
 				var token = new JwtSecurityToken(
 					issuer: this.configuration["JWT:ValidIssuer"],
 					audience: this.configuration["JWT:ValidAudience"],
+					expires: DateTime.Now.AddHours(3),
 					claims: authClaims,
 					signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
 				);
@@ -70,6 +73,7 @@ namespace Saa3idWeb.Controllers
 		[HttpPost]
 		[Route("register")]
 		//[ValidateAntiForgeryToken]
+		[AllowAnonymous]
 		public async Task<IActionResult> Register([Bind("UserName,FirstName,MiddleName,LastName,ExtName,Email,Gender,HomeAddress,Neighborhood,City")] Saa3idWeb.Auth.Register model)
 		{
 			//if (ModelState.IsValid)
@@ -135,5 +139,12 @@ namespace Saa3idWeb.Controllers
 				user = model,
 			});
 		}
+
+		//[HttpPost]
+		//[AllowAnonymous]
+		//public async Task<IActionResult> Logout()
+		//{
+			
+		//}
 	}
 }
