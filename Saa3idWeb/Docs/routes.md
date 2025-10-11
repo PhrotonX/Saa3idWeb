@@ -9,29 +9,32 @@
 | [api/emergency/search](#apiemergencysearch) | GET | None | Searches for emergency data from the DB. |
 | [api/emergency/create](#apiemergencycreate) | POST | None | Submits an emergency data into the DB. |
 | [api/emergency/update/{id}](#apiemergencyupdateid) | PUT | None | Updates an emergency data from the DB. |
-| [api/emergency/delete/{id}](#apiemergencydeleteid) | DELETE | None | Deletes an emergency data from the DB. |
+| [api/emergency/delete/{id}](#apiemergencydeleteid) | DELETE | User Account | Deletes an emergency data from the DB. |
 | [api/hotline/](#apihotline) | GET | None | Obtains an array of hotlines. |
 | [api/hotline/{id}](#apihotlineid) | GET | None | Obtains a single hotline data. |
 | [api/hotline/search](#apihotlinesearch) | GET | None | Searches for hotline data from the DB. |
-| [api/hotline/create](#apihotlinecreate) | POST | None | Submits a hotline data into the DB. |
-| [api/hotline/update/{id}](#apihotlineupdateid) | PUT | None | Updates a hotline data from the DB. |
-| [api/hotline/delete/{id}](#apihotlinedeleteid) | DELETE | None | Deletes a hotline data from the DB. |
+| [api/hotline/create](#apihotlinecreate) | POST | User Account | Submits a hotline data into the DB. |
+| [api/hotline/update/{id}](#apihotlineupdateid) | PUT | User Account | Updates a hotline data from the DB. |
+| [api/hotline/delete/{id}](#apihotlinedeleteid) | DELETE | User Account | Deletes a hotline data from the DB. |
 | [api/location/](#apilocation) | GET | None | Obtains an array of locations. |
 | [api/location/{id}](#apilocationid) | GET | None | Obtains a single location data. |
 | [api/location/search](#apilocationsearch) | POST | None | Searches location data from the DB. |
-| [api/location/create](#apilocationcreate) | POST | None | Submits a location data into the DB. |
-| [api/location/update/{id}](#apilocationupdateid) | PUT | None | Updates a location data from the DB. |
-| [api/location/delete/{id}](#apilocationdeleteid) | DELETE | None | Deletes a location data from the DB. |
+| [api/location/create](#apilocationcreate) | POST | User Account | Submits a location data into the DB. |
+| [api/location/update/{id}](#apilocationupdateid) | PUT | User Account | Updates a location data from the DB. |
+| [api/location/delete/{id}](#apilocationdeleteid) | DELETE | User Account | Deletes a location data from the DB. |
+| [login/](#login) | POST | None | Authenticates a registered user. |
+| [register/](#register) | POST | None | Creates a user account. Does not automatically authenticate the user. |
+
+**Note:** In further versions, some of the routes will require a User account with a **volunteer** membership.
 
 ## General rules for APIs
 - Each route returns a JSON format.
-- APIs that return a **redirect** can be used to navigate into specific pages based on its data. For instance, a **redirect** returning a "home" value shall make its front-end navigate into a homepage.
+- APIs that return a **redirect** can be used to navigate into specific pages based on its data. For instance, a **redirect** returning a "home" value shall make its front-end navigate into a homepage. **<u>It should be treated as a signal for page navigation and not an actual route.</u>**
 - APIs that return a **status** typically returns "OK" and "Error".
 - APIs may return an array of key-value pairs. For instance, a key "hotlines" may have {"title":"Sample Title", "description":"sample Description"} as its value.
 - APIs may return HTTP status responses.
     - Error 404 if a specified resource does not exist. For instance, submitting ID 5 on a route wherein the database only consists of item IDs 1-4 throws error 404.
 - APIs may require entity models in a JSON format. Typically found in POST, PUT, and PATCH requests. These require setting up JSON keys to correspond into a DB field. For instance, an entity model named Location requiring Title,Description,Latitude,Longitude,LocationType shall have the following JSON data into an HTTP request:
-- Parameters with "?" are optional.
 ```json
 {
     "Title": "Sample Title",
@@ -41,6 +44,16 @@
     "LocationType":"evacuation_center"
 }
 ```
+- Parameters with "?" are optional.
+- All returned DateTime format are YYYY-MM-DDTHH:DD:SSZ with no respect to timezone. It is recommended to manually add additional hours or minutes depending on the timezone. For instance, the timezone for Manila requires adding +08:00 hours into the returned DateTime data.
+- Authentication tokens returned by the login route is used in the following format when accessing routes with authorization in CURL format:
+```curl
+curl -X '[HTTP_REQUEST_TYPE]' \
+  '[route_address]' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer [token]
+```
+
 - APIs may require a query string. These query strings starts with a question mark on its URL
     - Spaces on query strings are represented by %20.
     - Multiple queries are split by "&amp;" symbol.
@@ -134,9 +147,11 @@
 **Returns:**
 - **hotline:** The newly created hotline data.
 - **status:**
-    - Returns "succeed" if succeeds and is considered a bug [(Issue #16)](https://github.com/PhrotonX/Saa3idWeb/issues/16).
-    - Returns an HTML page if fails and is considered a bug [(Issue #16)](https://github.com/PhrotonX/Saa3idWeb/issues/16).
-- **redirect:** Returns "hotline/view" if succeeds.
+    - Returns "Ok" if succeeds.
+    - Returns "Error" if fails.
+- **redirect:**
+    - Returns "hotline/view" if succeeds.
+    - Returns "hotline/edit" if fails.
 
 ### api/hotline/update/{id}
 **Request Content:**
@@ -230,3 +245,41 @@
 **Returns:**
 - **status**
 - **redirect**
+
+### login/
+**Request Content:**
+- **username**
+- **password**
+**Returns:**
+- **token:** Authentication token. Used to access routes that require authentication.
+- **expiration:** The expiration date of token.
+- May also return a JSON consisting of Unauthorized message.
+
+### register/
+**Request Content:**
+- **UserName:** Required, 3 to 255 characters, string
+- **FirstName:** Required, 3 to 255 characters, string
+- **MiddleName:** Maximum of 255 characters
+- **LastName:** Required, 3 to 255 characters, string
+- **ExtName:** Maximum of 255 characters.
+- **Gender:** Accepts F and M characters only.
+- **Password:** Required, 8 too 255 characters, string [A-z, 0-9] and at least one special character.
+- **PhoneNumber:** Proper phone number format.
+- **Email:** Required, proper email format
+- **HomeAddress:** Required, 3 to 255 characters, string. Must be displayed as "House/Street/Subdivision" on front-end fields.
+- **Neighborhood:** Required, 3 to 255 characters, string. Must be displayed like "Brgy." on front-end fields.
+- **City:** Required, 3 to 255 characters, string. Must be displayed as "City/Municipality" on front-end fields.
+
+**Returns:**
+- **status:**
+    - Returns "OK" if succeeds.
+    - Returns "Error" otherwise.
+- **redirect:**
+    - Returns "home" if succeeds.
+    - Returns "register" if fails.
+- **message**
+    - Is only available if an error occurs while checking for user duplicates or during user account creation.
+- **result:**
+    - Is only available if an error occurs during user account creation.
+- **user:**
+    - Returns the newly submitted user data.
