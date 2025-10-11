@@ -147,9 +147,11 @@ curl -X '[HTTP_REQUEST_TYPE]' \
 **Returns:**
 - **hotline:** The newly created hotline data.
 - **status:**
-    - Returns "succeed" if succeeds and is considered a bug [(Issue #16)](https://github.com/PhrotonX/Saa3idWeb/issues/16).
-    - Returns an HTML page if fails and is considered a bug [(Issue #16)](https://github.com/PhrotonX/Saa3idWeb/issues/16).
-- **redirect:** Returns "hotline/view" if succeeds.
+    - Returns "Ok" if succeeds.
+    - Returns "Error" if fails.
+- **redirect:**
+    - Returns "hotline/view" if succeeds.
+    - Returns "hotline/edit" if fails.
 
 ### api/hotline/update/{id}
 **Request Content:**

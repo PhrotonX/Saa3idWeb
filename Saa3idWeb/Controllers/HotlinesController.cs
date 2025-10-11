@@ -166,12 +166,17 @@ namespace Saa3idWeb.Controllers
 			return await this.OnCreate(hotline, (data) => {
 				return Json(new
 				{
-					status = "success",
+					status = "Ok",
 					hotline = data,
 					redirect = "hotline/view",
 				});
 			}, (data) => {
-				return View(data);
+				return Json(new
+				{
+					status = "Error",
+					hotline = data,
+					redirect = "hotline/edit",
+				});
 			});
 		}
 
