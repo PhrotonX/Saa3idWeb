@@ -2,26 +2,26 @@
 
 ## List of available API routes
 
-| Route | Request Type | Action Name | Description | Parameters | Return Value |
-| - | - | - | - | - | - |
-| [api/emergency/](#apiemergency) | GET |  | Obtains an array of emergencies. | | |
-| [api/emergency/{id}](#apiemergencyid) | GET | | Obtains a single emergency data. | | |
-| [api/emergency/search](#apiemergencysearch) | GET | | Searches for emergency data from the DB. | | |
-| [api/emergency/create](#apiemergencycreate) | POST | | Submits an emergency data into the DB. |  | 
-| [api/emergency/update/{id}](#apiemergencyupdateid) | PUT | | Updates an emergency data from the DB. | | |
-| api/emergency/delete/{id} | DELETE | API.Emergency.DeleteConfirmed | Deletes an emergency data from the DB. | Id - Emergency ID | status, redirect |
-| api/hotline/ | GET |  | Obtains an array of hotlines. | | hotline (array) - Each item contains key-value pair of elements |
-| api/hotline/{id} | GET | | Obtains a single hotline data. | Id - Hotline ID | hotline, status |
-| [api/hotline/search](#apihotlinesearch) | GET | | Searches for hotline data from the DB. | | |
-| api/hotline/create | POST |  | Submits a hotline data into the DB. | Id,Latitude,Longitude,UserId | hotline, status
-| api/hotline/update/{id} | PUT | | Updates a hotline data from the DB. | Id - Hotline ID | status, redirect, hotline |
-| api/hotline/delete/{id} | DELETE |  | Deletes a hotline data from the DB. | Id - Hotline ID | status, redirect |
-| [api/location/](#apilocation) | GET |  | Obtains an array of locations. | | |
-| [api/location/{id}](#apilocationid) | GET | | Obtains a single location data. |  |  |
-| [api/location/search](#apilocationsearch) | POST |  | Searches location data from the DB. |  | 
-| [api/location/create](#apilocationcreate) | POST |  | Submits a location data into the DB. |  | 
-| [api/location/update/{id}](#apilocationupdateid) | PUT | | Updates a location data from the DB. |  |  |
-| [api/location/delete/{id}](#apilocationdeleteid) | DELETE |  | Deletes a location data from the DB. |  |  |
+| Route | Request Type | Authorization | Description |
+| - | - | - | - |
+| [api/emergency/](#apiemergency) | GET | None | Obtains an array of emergencies. |
+| [api/emergency/{id}](#apiemergencyid) | GET | None | Obtains a single emergency data. |
+| [api/emergency/search](#apiemergencysearch) | GET | None | Searches for emergency data from the DB. |
+| [api/emergency/create](#apiemergencycreate) | POST | None | Submits an emergency data into the DB. |
+| [api/emergency/update/{id}](#apiemergencyupdateid) | PUT | None | Updates an emergency data from the DB. |
+| [api/emergency/delete/{id}](#apiemergencydeleteid) | DELETE | None | Deletes an emergency data from the DB. |
+| [api/hotline/](#apihotline) | GET | None | Obtains an array of hotlines. |
+| [api/hotline/{id}](#apihotlineid) | GET | None | Obtains a single hotline data. |
+| [api/hotline/search](#apihotlinesearch) | GET | None | Searches for hotline data from the DB. |
+| [api/hotline/create](#apihotlinecreate) | POST | None | Submits a hotline data into the DB. |
+| [api/hotline/update/{id}](#apihotlineupdateid) | PUT | None | Updates a hotline data from the DB. |
+| [api/hotline/delete/{id}](#apihotlinedeleteid) | DELETE | None | Deletes a hotline data from the DB. |
+| [api/location/](#apilocation) | GET | None | Obtains an array of locations. |
+| [api/location/{id}](#apilocationid) | GET | None | Obtains a single location data. |
+| [api/location/search](#apilocationsearch) | POST | None | Searches location data from the DB. |
+| [api/location/create](#apilocationcreate) | POST | None | Submits a location data into the DB. |
+| [api/location/update/{id}](#apilocationupdateid) | PUT | None | Updates a location data from the DB. |
+| [api/location/delete/{id}](#apilocationdeleteid) | DELETE | None | Deletes a location data from the DB. |
 
 ## General rules for APIs
 - Each route returns a JSON format.
@@ -49,7 +49,6 @@
 ```
     http://127.0.0.1:8080/api/emergency/search?title=title%20here&description=this_is_a%20description.
 ```
-
 
 ## Details
 ### api/emergency/
@@ -103,6 +102,63 @@
 **Returns:**
 - **status:**
     - Returns "OK" if it succeed, "Error" otherwise.
+
+### api/emergency/delete/{id}
+**Action Name:** API.Emergency.DeleteConfirmed
+**Parameters:**
+- **Id:** The ID of emergency data.
+**Returns:**
+- **status:** Returns "OK" if succeeds.
+- **redirect:** Returns "home" for homepage.
+
+### api/hotline/
+**Returns:**
+- **status:** - Returns "OK" if succeeds.
+- **hotline** (array) - Each item contains key-value pair of elements
+
+### api/hotline/{id}
+**Parameters:**
+- **Id** - Hotline ID
+**Returns:**
+- **hotline:** A single hotline data
+- **status:** Returns "OK" if succeeds.
+
+### api/hotline/create
+**Request Content:**
+- **Id:** (deprecated, to be removed soon) - The ID of the data
+- **Type:** Required
+- **Number:** Required
+- **Neighborhood:** Required
+- **City:** Required
+- **Province:** Required
+**Returns:**
+- **hotline:** The newly created hotline data.
+- **status:**
+    - Returns "succeed" if succeeds and is considered a bug [(Issue #16)](https://github.com/PhrotonX/Saa3idWeb/issues/16).
+    - Returns an HTML page if fails and is considered a bug [(Issue #16)](https://github.com/PhrotonX/Saa3idWeb/issues/16).
+- **redirect:** Returns "hotline/view" if succeeds.
+
+### api/hotline/update/{id}
+**Request Content:**
+- **Id:** (deprecated, to be removed soon) - The ID of the data
+- **Type:** Required
+- **Number:** Required
+- **Neighborhood:** Required
+- **City:** Required
+- **Province:** Required
+**Returns:**
+- **hotline:** The newly created hotline data.
+- **status:**
+    - Returns "OK" if succeeds.
+    - Returns "error" if fails.
+- **redirect:** Returns "hotlines" if succeeds.
+
+### api/hotline/delete/{id}
+**Parameters:**
+- **Id:** - Hotline ID
+**Returns:**
+- **status:** - Returns "OK" if succeeds.
+- **redirect:** - Returns "hotlines".
 
 ### api/hotline/search
 **Query Strings:**
