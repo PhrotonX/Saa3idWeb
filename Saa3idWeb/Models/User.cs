@@ -26,10 +26,10 @@ namespace Saa3idWeb.Models
 		[Required(ErrorMessage = "City is required."), StringLength(255, ErrorMessage = "City has a minimum of 3 and a maximum of 255 characters.", MinimumLength = 3)]
 		public required string City { get; set; }
 		[Required(ErrorMessage = "Province is required."), StringLength(255, ErrorMessage = "Province has a minimum of 3 and a maximum of 255 characters.", MinimumLength = 3)]
-		public required string Province { get; set; } = "Pampanga";
+		public required string Province { get; set; }
 		[Required(ErrorMessage = "Country is required."), StringLength(255, ErrorMessage = "Country has a minimum of 3 and a maximum of 255 characters.", MinimumLength = 3)]
-		public required string Country { get; set; } = "Philippines";
+		public required string Country { get; set; }
 		[Required(ErrorMessage = "User member is required."), StringLength(255, ErrorMessage = "House/Street/Subdivision has a maximum of 255 characters.")]
-		public required string UserType { get; set; } = "member";
+		public required string UserType { get; set; }
 	}
 }

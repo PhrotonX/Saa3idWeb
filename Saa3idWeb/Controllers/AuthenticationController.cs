@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.IdentityModel.Tokens;
 using Saa3idWeb.Auth;
 using Saa3idWeb.Data;
@@ -86,7 +87,7 @@ namespace Saa3idWeb.Controllers
 					});
 				}
 
-				User newUser = new User()
+			User newUser = new User()
 				{
 					UserName = model.UserName,
 					FirstName = model.FirstName,
@@ -94,13 +95,13 @@ namespace Saa3idWeb.Controllers
 					LastName = model.LastName,
 					ExtName = model.ExtName,
 					Email = model.Email,
-					Gender = model.Gender,
+					Gender = model.Gender.First(),
 					HomeAddress = model.HomeAddress,
 					Neighborhood = model.Neighborhood,
 					City = model.City,
-					Province = model.Province,
-					Country = model.Country,
-					UserType = model.UserType,
+					Province = "Pampanga",
+					Country = "Philippines",
+					UserType = "member",
 
 					SecurityStamp = Guid.NewGuid().ToString(),
 				};
@@ -110,6 +111,7 @@ namespace Saa3idWeb.Controllers
 				{
 					return StatusCode(500, new
 					{
+						result = result.Errors,
 						status = "Error",
 						redirect = "register",
 						message = "Incorrect credentials",
