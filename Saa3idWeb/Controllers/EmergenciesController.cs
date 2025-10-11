@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using Saa3idWeb.Util;
 
 namespace Saa3idWeb.Controllers
 {
+	//[ApiController]
     public class EmergenciesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,12 +24,14 @@ namespace Saa3idWeb.Controllers
             _context = context;
         }
 
+		[AllowAnonymous]
         // GET: Emergencies
         public async Task<IActionResult> Index()
         {
             return View(await _context.Emergency.ToListAsync());
         }
 
+		[AllowAnonymous]
 		[HttpGet("api/emergency"), ActionName("API.Emergency.Index")]
 		public async Task<IActionResult> IndexAPI()
 		{
@@ -37,6 +41,7 @@ namespace Saa3idWeb.Controllers
 			});
 		}
 
+		[AllowAnonymous]
         // GET: Emergencies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -46,6 +51,7 @@ namespace Saa3idWeb.Controllers
 			});
         }
 
+		[AllowAnonymous]
 		[HttpGet("api/emergency/{id}")]
 		public async Task<IActionResult> DetailsAPI(int? id)
 		{
@@ -76,12 +82,13 @@ namespace Saa3idWeb.Controllers
 			return successCallback(id, emergency);
 		}
 
+		[AllowAnonymous]
 		[HttpGet("api/emergency/search")]
 		public async Task<IActionResult> SearchAPI(float? lng, float? lat, int? userId)
 		{
 			return Json(new
 			{
-				results = this.OnSearch(lat, lng, userId)
+				results = await this.OnSearch(lat, lng, userId)
 			});
 		}
 
@@ -111,6 +118,7 @@ namespace Saa3idWeb.Controllers
 			return await _context.Emergency.FromSqlRaw<Emergency>(query).ToListAsync();
 		}
 
+		[AllowAnonymous]
 		// GET: Emergencies/Create
 		public IActionResult Create()
         {
@@ -122,6 +130,7 @@ namespace Saa3idWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+		[AllowAnonymous]
         public async Task<IActionResult> Create([Bind("Id,Latitude,Longitude,CreatedAt,UpdatedAt,UserId")] Emergency emergency)
         {
             if (ModelState.IsValid)
@@ -137,6 +146,7 @@ namespace Saa3idWeb.Controllers
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost("api/emergency/create")]
+		[AllowAnonymous]
 		//[ValidateAntiForgeryToken]
 		public async Task<IActionResult> CreateAPI([Bind("Id,Latitude,Longitude,UserId")] Emergency emergency)
 		{
@@ -155,6 +165,7 @@ namespace Saa3idWeb.Controllers
 			});
 		}
 
+		[AllowAnonymous]
 		// GET: Emergencies/Edit/5
 		public async Task<IActionResult> Edit(int? id)
         {
@@ -175,6 +186,7 @@ namespace Saa3idWeb.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPut]
+		[AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
 			[Bind("Id,Latitude,Longitude,CreatedAt,UpdatedAt,UserId")] Emergency emergency)
@@ -187,6 +199,7 @@ namespace Saa3idWeb.Controllers
         }
 
 		[HttpPut("api/emergency/edit"), ]
+		[AllowAnonymous]
 		public async Task<IActionResult> EditApi(int id,
 			[Bind("Id,Latitude,Longitude,CreatedAt,UpdatedAt,UserId")] Emergency emergency)
 		{
@@ -237,6 +250,7 @@ namespace Saa3idWeb.Controllers
 			return successCallback(emergency);
 		}
 
+		[Authorize]
 		// GET: Emergencies/Delete/5
 		public async Task<IActionResult> Delete(int? id)
         {
@@ -258,7 +272,8 @@ namespace Saa3idWeb.Controllers
         // DELETE: Emergencies/Delete/5
         [HttpDelete, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+		[Authorize]
+		public async Task<IActionResult> DeleteConfirmed(int id)
         {
 			await this.OnDeleteConfirmed(id);
 
@@ -267,6 +282,7 @@ namespace Saa3idWeb.Controllers
 
 		[HttpDelete("api/emergency/delete"), ActionName("DeleteConfirmedApi")]
 		//[ValidateAntiForgeryToken]
+		[Authorize]
 		public async Task<IActionResult> DeleteConfirmedApi(int id)
 		{
 			await this.OnDeleteConfirmed(id);

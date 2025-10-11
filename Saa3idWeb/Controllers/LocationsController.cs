@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Saa3idWeb.Data;
 using Saa3idWeb.Models;
 using Saa3idWeb.Util;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Saa3idWeb.Controllers
 {
@@ -20,13 +21,15 @@ namespace Saa3idWeb.Controllers
             _context = context;
         }
 
-        // GET: Locations
-        public async Task<IActionResult> Index()
+		// GET: Locations
+		[AllowAnonymous]
+		public async Task<IActionResult> Index()
         {
             return View(await _context.Location.ToListAsync());
         }
 
 		[HttpGet("api/location")]
+		[AllowAnonymous]
 		public async Task<IActionResult> IndexAPI()
 		{
 			return Json(new
@@ -36,6 +39,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		// GET: Locations/Details/5
+		[AllowAnonymous]
 		public async Task<IActionResult> Details(int? id)
         {
 			return await this.OnGetDetails(id, (location) =>
@@ -45,6 +49,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		[HttpGet("api/location/{id}")]
+		[AllowAnonymous]
 		public async Task<IActionResult> DetailsAPI(int? id)
 		{
 			return await this.OnGetDetails(id, (location) =>
@@ -76,6 +81,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		[HttpGet("api/location/search")]
+		[AllowAnonymous]
 		public async Task<IActionResult> SearchApi(String? title, String? description, float? latitude, float? longitude)
 		{
 			return Json(new
@@ -114,7 +120,8 @@ namespace Saa3idWeb.Controllers
 			return await _context.Location.FromSqlRaw<Location>(query).ToListAsync();
 		}
 
-        // GET: Locations/Create
+		// GET: Locations/Create
+		[Authorize]
         public IActionResult Create()
         {
             return View();
@@ -124,7 +131,8 @@ namespace Saa3idWeb.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+		[Authorize]
+		[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Description,Latitude,Longitude,LocationType")] Location location)
         {
 			return await this.OnCreate(location, (data) => {
@@ -136,6 +144,7 @@ namespace Saa3idWeb.Controllers
 
 		[HttpPost("api/location/create")]
 		//[ValidateAntiForgeryToken]
+		[Authorize]
 		public async Task<IActionResult> CreateAPI([Bind("Title,Description,Latitude,Longitude,LocationType")] Location location)
 		{
 			return await this.OnCreate(location, (data) => {
@@ -169,8 +178,9 @@ namespace Saa3idWeb.Controllers
 			return failureCallback(location);
 		}
 
-        // GET: Locations/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+		// GET: Locations/Edit/5
+		[Authorize]
+		public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -190,7 +200,8 @@ namespace Saa3idWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPut]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,Description,Latitude,Longitude,LocationType")] Location location)
+		[Authorize]
+		public async Task<IActionResult> Edit(int id, [Bind("Title,Description,Latitude,Longitude,LocationType")] Location location)
         {
 			return await this.OnEdit(id, location, (dataId, data) =>
 			{
@@ -202,6 +213,7 @@ namespace Saa3idWeb.Controllers
         }
 
 		[HttpPut("api/location/edit/{id}")]
+		[Authorize]
 		public async Task<IActionResult> EditAPI(int id, Location location)
 		{
 			return await this.OnEdit(id, location, (dataId, data) =>
@@ -257,6 +269,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		// GET: Locations/Delete/5
+		[Authorize]
 		public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -277,7 +290,8 @@ namespace Saa3idWeb.Controllers
         // DELETE: Locations/Delete/5
         [HttpDelete, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+		[Authorize]
+		public async Task<IActionResult> DeleteConfirmed(int id)
         {
 			return await this.OnDeleteConfirmed(id, () =>
 			{
@@ -286,6 +300,7 @@ namespace Saa3idWeb.Controllers
 		}
 
 		[HttpDelete("api/location/delete/{id}")]
+		[Authorize]
 		public async Task<IActionResult> DeleteConfirmedAPI(int id)
 		{
 			return await this.OnDeleteConfirmed(id, () =>
