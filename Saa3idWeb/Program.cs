@@ -12,8 +12,8 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 builder.Services.AddControllersWithViews();
 
@@ -29,24 +29,24 @@ builder.Services.AddIdentity<Saa3idWeb.Models.User, IdentityRole>()
 	.AddDefaultTokenProviders();
 
 // Add Authentication
-//builder.Services.AddAuthentication(options =>
-//{
-//	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//	options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-//}).AddJwtBearer(options =>
-//{
-//	options.SaveToken = true;
-//	options.RequireHttpsMetadata = true;
-//	options.TokenValidationParameters = new TokenValidationParameters()
-//	{
-//		ValidateIssuer = true,
-//		ValidateAudience = true,
-//		ValidAudience = builder.Configuration["JWT:ValidAudience"],
-//		ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-//		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"] ?? ""))
-//	};
-//});
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+	options.SaveToken = true;
+	options.RequireHttpsMetadata = true;
+	options.TokenValidationParameters = new TokenValidationParameters()
+	{
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidAudience = builder.Configuration["JWT:ValidAudience"],
+		ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"] ?? ""))
+	};
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -58,29 +58,29 @@ builder.Services.AddSwaggerGen(swagger =>
 		Title = "Saa3idWeb API",
 	});
 
-	//swagger.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
-	//{
-	//	Name = "Authorization",
-	//	Type = SecuritySchemeType.ApiKey,
-	//	Scheme = "Bearer",
-	//	BearerFormat = "JWT",
-	//	In = ParameterLocation.Header,
-	//});
+	swagger.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+	{
+		Name = "Authorization",
+		Type = SecuritySchemeType.ApiKey,
+		Scheme = "Bearer",
+		BearerFormat = "JWT",
+		In = ParameterLocation.Header,
+	});
 
-	//swagger.AddSecurityRequirement(new OpenApiSecurityRequirement()
-	//{
-	//	{
-	//		new OpenApiSecurityScheme()
-	//		{
-	//			Reference= new OpenApiReference()
-	//			{
-	//				Type = ReferenceType.SecurityScheme,
-	//				Id = "Bearer",
-	//			}
-	//		},
-	//		new string[]{ }
-	//	}
-	//});
+	swagger.AddSecurityRequirement(new OpenApiSecurityRequirement()
+	{
+		{
+			new OpenApiSecurityScheme()
+			{
+				Reference= new OpenApiReference()
+				{
+					Type = ReferenceType.SecurityScheme,
+					Id = "Bearer",
+				}
+			},
+			new string[]{ }
+		}
+	});
 });
 
 // Build the app.
