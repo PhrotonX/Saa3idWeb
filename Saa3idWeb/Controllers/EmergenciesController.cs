@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
+using Newtonsoft.Json;
 using Saa3idWeb.Data;
 using Saa3idWeb.Models;
 using Saa3idWeb.Util;
@@ -18,10 +19,12 @@ namespace Saa3idWeb.Controllers
     public class EmergenciesController : Controller
     {
         private readonly ApplicationDbContext _context;
+		private EmergencyNotifier notifier;
 
-        public EmergenciesController(ApplicationDbContext context)
+        public EmergenciesController(ApplicationDbContext context, EmergencyNotifier notifier)
         {
             _context = context;
+			this.notifier = notifier;
         }
 
 		[AllowAnonymous]
@@ -154,14 +157,22 @@ namespace Saa3idWeb.Controllers
 			{
 				_context.Add(emergency);
 				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
+
+				await this.notifier.Notify(emergency);
+
+				return Json(new
+				{
+					status = "OK",
+					emergency = emergency,
+					success = true
+				});
 			}
 
 			return Json(new
 			{
-				status = "OK",
+				status = "Error",
 				emergency = emergency,
-				success = true
+				success = false
 			});
 		}
 

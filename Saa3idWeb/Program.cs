@@ -6,6 +6,7 @@ using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Saa3idWeb.Data;
+using Saa3idWeb.Util;
 using System.Configuration;
 using System.Text;
 
@@ -82,6 +83,8 @@ builder.Services.AddSwaggerGen(swagger =>
 		}
 	});
 });
+
+builder.Services.AddSingleton<EmergencyNotifier>();
 
 // Build the app.
 var app = builder.Build();
