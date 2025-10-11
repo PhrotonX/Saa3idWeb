@@ -52,9 +52,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(swagger =>
 {
-	swagger.SwaggerDoc("v0.1.0", new Microsoft.OpenApi.Models.OpenApiInfo()
+	swagger.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
 	{
-		Version = "v0.1.0",
+		Version = "v1",
 		Title = "Saa3idWeb API",
 	});
 
@@ -95,10 +95,10 @@ using(var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
+	app.UseSwagger();
 	app.UseSwaggerUI(setup =>
 	{
-		setup.SwaggerEndpoint("/swagger/v0.1.0/swagger.json", "Saa3idWeb API");
+		setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Saa3idWeb API");
 	});
 //}
 
