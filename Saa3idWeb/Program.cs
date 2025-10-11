@@ -93,14 +93,14 @@ using(var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
 	app.UseSwaggerUI(setup =>
 	{
 		setup.SwaggerEndpoint("/swagger/v0.1.0/swagger.json", "Saa3idWeb API");
 	});
-}
+//}
 
 app.UseHttpsRedirection();
 

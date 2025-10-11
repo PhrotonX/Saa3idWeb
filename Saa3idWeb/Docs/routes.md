@@ -22,6 +22,8 @@
 | [api/location/create](#apilocationcreate) | POST | None | Submits a location data into the DB. |
 | [api/location/update/{id}](#apilocationupdateid) | PUT | None | Updates a location data from the DB. |
 | [api/location/delete/{id}](#apilocationdeleteid) | DELETE | None | Deletes a location data from the DB. |
+| [login/](#login) | POST | None | Authenticates a registered user. |
+| [register/](#register) | POST | None | Creates a user account. |
 
 ## General rules for APIs
 - Each route returns a JSON format.
@@ -31,7 +33,6 @@
 - APIs may return HTTP status responses.
     - Error 404 if a specified resource does not exist. For instance, submitting ID 5 on a route wherein the database only consists of item IDs 1-4 throws error 404.
 - APIs may require entity models in a JSON format. Typically found in POST, PUT, and PATCH requests. These require setting up JSON keys to correspond into a DB field. For instance, an entity model named Location requiring Title,Description,Latitude,Longitude,LocationType shall have the following JSON data into an HTTP request:
-- Parameters with "?" are optional.
 ```json
 {
     "Title": "Sample Title",
@@ -41,6 +42,16 @@
     "LocationType":"evacuation_center"
 }
 ```
+- Parameters with "?" are optional.
+- All returned DateTime format are YYYY-MM-DDTHH:DD:SSZ with no respect to timezone. It is recommended to manually add additional hours or minutes depending on the timezone. For instance, the timezone for Manila requires adding +08:00 hours into the returned DateTime data.
+- Authentication tokens returned by the login route is used in the following format when accessing routes with authorization in CURL format:
+```curl
+curl -X '[HTTP_REQUEST_TYPE]' \
+  '[route_address]' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer [token]
+```
+
 - APIs may require a query string. These query strings starts with a question mark on its URL
     - Spaces on query strings are represented by %20.
     - Multiple queries are split by "&amp;" symbol.
@@ -230,3 +241,14 @@
 **Returns:**
 - **status**
 - **redirect**
+
+### login/
+**Request Content:**
+- **username**
+- **password**
+**Returns:**
+- **token:** Authentication token. Used to access routes that require authentication.
+- **expiration:** The expiration date of token.
+
+### register/
+**Request Content:**
