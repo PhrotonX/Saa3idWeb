@@ -69,11 +69,11 @@ namespace Saa3idWeb.Controllers
 		[HttpPost]
 		[Route("register")]
 		//[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Register([Bind("FirstName,MiddleName,LastName,ExtName,HomeAddress,Neighborhood,City,Province,Country")] Saa3idWeb.Auth.Register model)
+		public async Task<IActionResult> Register([Bind("UserName,FirstName,MiddleName,LastName,ExtName,Email,Gender,HomeAddress,Neighborhood,City")] Saa3idWeb.Auth.Register model)
 		{
-			if (ModelState.IsValid)
-			{
-				var userExists = this.userManager.FindByNameAsync(model.UserName);
+			//if (ModelState.IsValid)
+			//{
+				var userExists = this.userManager.FindByNameAsync(model.UserName).Result;
 
 				if(userExists != null)
 				{
@@ -119,18 +119,18 @@ namespace Saa3idWeb.Controllers
 				
 				//context.Add(user);
 				//await context.SaveChangesAsync();
-				return Json(new
-				{
-					status = "OK",
-					redirect = "home",
-					user = model,
-				});
-			}
+			//	return Json(new
+			//	{
+			//		status = "OK",
+			//		redirect = "home",
+			//		user = model,
+			//	});
+			//}
 			return Json(new
 			{
-				status = "Error",
-				redirect = "register",
-				user = user,
+				status = "OK",
+				redirect = "home",
+				user = model,
 			});
 		}
 	}

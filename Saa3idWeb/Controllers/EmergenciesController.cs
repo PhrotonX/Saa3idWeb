@@ -81,7 +81,7 @@ namespace Saa3idWeb.Controllers
 		{
 			return Json(new
 			{
-				results = this.OnSearch(lat, lng, userId)
+				results = await this.OnSearch(lat, lng, userId)
 			});
 		}
 

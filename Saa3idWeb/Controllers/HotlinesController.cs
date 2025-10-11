@@ -87,7 +87,7 @@ namespace Saa3idWeb.Controllers
 		{
 			return Json(new
 			{
-				results = this.OnSearch(type, number, neighborhood, city, province),
+				results = await this.OnSearch(type, number, neighborhood, city, province),
 			});
 		}
 

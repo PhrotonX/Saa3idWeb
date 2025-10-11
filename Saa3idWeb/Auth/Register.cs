@@ -20,6 +20,9 @@ namespace Saa3idWeb.Auth
 		[Required(ErrorMessage = "Password is required."), StringLength(255, ErrorMessage = "Password has a minimum of 8 and a maximum of 255 characters.", MinimumLength = 8)]
 		public required string Password { get; set; }
 
+		[Phone(ErrorMessage = "Invalid Phone Number")]
+		public string? PhoneNumber { get; set; } = "";
+
 		[Required(ErrorMessage = "Email is required."), EmailAddress(ErrorMessage = "Must be a proper type of email"), StringLength(255, ErrorMessage = "First name has a minimum of 3 and a maximum of 255 characters.", MinimumLength = 3)]
 		public required string Email { get; set; }
 		[Required(ErrorMessage = "House/Street/Subdivision is required."), StringLength(255, ErrorMessage = "House/Street/Subdivision has a minimum of 3 and a maximum of 255 characters.", MinimumLength = 3)]
